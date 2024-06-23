@@ -31,14 +31,32 @@ class Simulation:
         self.particles = []
     
     def add_particle(self, particle):
-        pass
+        self.particles.append(particle)
     
     def update(self):
-        #need to set gravitational constant; add for loop
-        pass
+        G = 6.67430e-11  # Gravitational constant
+
+        for i, p1 in enumerate(self.particles):
+            fx, fy = 0, 0
+            for j, p2 in enumerate(self.particles):
+                if i != j:
+                    dx = p2.x - p1.x
+                    dy = p2.y - p1.y
+                    distance = math.sqrt(dx ** 2 + dy ** 2)
+                    if distance > p1.radius + p2.radius:
+                        force = G * p1.mass * p2.mass / distance ** 2
+                        fx += force * dx / distance
+                        fy += force * dy / distance
+            
+            p1.vx += fx / p1.mass
+            p1.vy += fy / p1.mass
+            p1.x += p1.vx
+            p1.y += p1.vy
     
     def draw(self, screen):
-        pass
+        for particle in self.particles:
+            particle.draw(screen)
+
     
 # Need main game loop
 running = True
