@@ -63,4 +63,18 @@ running = True
 simulation = Simulation()
 
 while running:
-    pass
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            x, y = pygame.mouse.get_pos()
+            particle = Particle(x, y, mass=1e10, radius=5)
+            simulation.add_particle(particle)
+            
+    screen.fill(BLACK)
+    simulation.update()
+    simulation.draw(screen)
+    pygame.display.flip()
+
+pygame.quit()
+sys.exit()
