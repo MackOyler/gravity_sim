@@ -10,18 +10,21 @@ A simple gravity simulator built with Python and Pygame, where particles appear 
 
 ## Science Behind the Simulation
 
-The behavior of the particles in this simulation is governed by the principles of Newtonian gravity. According to Newton's law of universal gravitation, every particle in the universe attracts every other particle with a force that is directly proportional to the product of their masses and inversely proportional to the square of the distance between their centers. The formula for this gravitational force \( F \) is:
+The behavior of the particles in this simulation is governed by the principles of Newtonian gravity. According to Newton's law of universal gravitation, every particle in the universe attracts every other particle with a force that is directly proportional to the product of their masses and inversely proportional to the square of the distance between their centers. The formula for this gravitational force \( F \) is: <br>
 
-\[ F = G \frac{m_1 m_2}{r^2} \]
 
-Where:
-- \( G \) is the gravitational constant \( (6.67430 \times 10^{-11} \, \text{m}^3 \text{kg}^{-1} \text{s}^{-2}) \)
+<img src="./assets/gravitational_force.png" alt="Gravitational Force" width="400"/>
+
+Where: <br>
+<img src="./assets/gravitational_constant.png" alt="Gravitational Constant" width="400"/>
+
 - \( m_1 \) and \( m_2 \) are the masses of the two particles
 - \( r \) is the distance between the centers of the two particles
 
 In the simulation, the particles' positions and velocities are updated at each time step based on the gravitational forces exerted by all other particles. The force calculation involves determining the vector components of the force in the x and y directions, which are then used to update the particles' velocities and positions.
 
 This creates a dynamic system where particles move according to the gravitational influences they exert on each other, resulting in complex and interesting behaviors that mimic the gravitational interactions seen in real-world physics.
+
 
 
 ## Installation
