@@ -1,6 +1,7 @@
 import pygame
 import sys
 import math
+import itertools
 
 pygame.init()
 
@@ -8,18 +9,27 @@ pygame.init()
 WIDTH, HEIGHT = 800, 600
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+PARTICLE_RADIUS = 5
+PARTICLE_MASS = 1e10
 
-# screen setup
+# Predefined colors
+COLORS = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), 
+          (255, 0, 255), (0, 255, 255), (255, 165, 0), (128, 0, 128)]
+
+# Create a color cycle iterator
+color_cycle = itertools.cycle(COLORS)
+
+# Screen setup
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Gravity Simulator")
 
 class Particle:
-    def __init__(self, x, y, mass):
+    def __init__(self, x, y, color):
         self.x = x
         self.y = y
-        self.mass = mass
-        self.radius = int(math.sqrt(mass) / 1000)  # Radius based on mass
-        self.color = (min(255, int(mass / 1e9)), 0, 255 - min(255, int(mass / 1e9)))  # Color based on mass
+        self.mass = PARTICLE_MASS
+        self.radius = PARTICLE_RADIUS
+        self.color = color
         self.vx = 0
         self.vy = 0
 
@@ -67,8 +77,8 @@ while running:
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
             x, y = pygame.mouse.get_pos()
-            mass = 1e10 + pygame.mouse.get_pressed()[0] * 1e11  # Adjust mass based on mouse button
-            particle = Particle(x, y, mass)
+            color = next(color_cycle)  # Get the next color from the cycle
+            particle = Particle(x, y, color)
             simulation.add_particle(particle)
 
     screen.fill(BLACK)
