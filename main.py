@@ -2,6 +2,7 @@ import pygame
 import sys
 import math
 import itertools
+import random
 
 pygame.init()
 
@@ -12,6 +13,7 @@ BLACK = (0, 0, 0)
 PARTICLE_RADIUS = 5
 DEFAULT_PARTICLE_MASS = 1e10
 MERGE_THRESHOLD = 100  # Number of close interactions before merging
+SPARK_LIFETIME = 20  # Lifetime of spark particles in frames
 
 # Predefined colors
 COLORS = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), 
@@ -38,9 +40,27 @@ class Particle:
     def draw(self, screen):
         pygame.draw.circle(screen, self.color, (int(self.x), int(self.y)), self.radius)
 
+class Spark:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.vx = random.uniform(-1, 1)
+        self.vy = random.uniform(-1, 1)
+        self.lifetime = SPARK_LIFETIME
+
+    def update(self):
+        self.x += self.vx
+        self.y += self.vy
+        self.lifetime -= 1
+
+    def draw(self, screen):
+        if self.lifetime > 0:
+            pygame.draw.circle(screen, WHITE, (int(self.x), int(self.y)), 2)
+
 class Simulation:
     def __init__(self):
         self.particles = []
+        self.sparks = []
 
     def add_particle(self, particle):
         self.particles.append(particle)
@@ -48,6 +68,10 @@ class Simulation:
     def remove_particle(self, particle):
         if particle in self.particles:
             self.particles.remove(particle)
+
+    def add_sparks(self, x, y):
+        for _ in range(10):  # Number of sparks
+            self.sparks.append(Spark(x, y))
 
     def update(self):
         G = 6.67430e-11  # Gravitational constant
@@ -66,12 +90,18 @@ class Simulation:
                     else:
                         p1.close_interactions += 1
                         if p1.close_interactions > MERGE_THRESHOLD:
+                            self.add_sparks(p1.x, p1.y)
                             self.merge_particles(p1, p2)
 
             p1.vx += fx / p1.mass
             p1.vy += fy / p1.mass
             p1.x += p1.vx
             p1.y += p1.vy
+
+        for spark in self.sparks[:]:
+            spark.update()
+            if spark.lifetime <= 0:
+                self.sparks.remove(spark)
 
     def merge_particles(self, p1, p2):
         if p2 in self.particles:
@@ -84,6 +114,8 @@ class Simulation:
     def draw(self, screen):
         for particle in self.particles:
             particle.draw(screen)
+        for spark in self.sparks:
+            spark.draw(screen)
 
     def calculate_total_energy(self):
         kinetic_energy = 0
