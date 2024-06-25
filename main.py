@@ -14,6 +14,7 @@ PARTICLE_RADIUS = 5
 DEFAULT_PARTICLE_MASS = 1e10
 MERGE_THRESHOLD = 100  # Number of close interactions before merging
 SPARK_LIFETIME = 20  # Lifetime of spark particles in frames
+TRAIL_LENGTH = 50  # Number of previous positions to keep for trail
 
 # Predefined colors
 COLORS = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), 
@@ -36,9 +37,21 @@ class Particle:
         self.vx = 0
         self.vy = 0
         self.close_interactions = 0
+        self.trail = []
 
     def draw(self, screen):
+        # Draw the trail
+        for i in range(1, len(self.trail)):
+            start_pos = self.trail[i-1]
+            end_pos = self.trail[i]
+            pygame.draw.line(screen, self.color, start_pos, end_pos, 2)
+        # Draw the particle
         pygame.draw.circle(screen, self.color, (int(self.x), int(self.y)), self.radius)
+
+    def update_trail(self):
+        self.trail.append((int(self.x), int(self.y)))
+        if len(self.trail) > TRAIL_LENGTH:
+            self.trail.pop(0)
 
 class Spark:
     def __init__(self, x, y):
@@ -97,6 +110,7 @@ class Simulation:
             p1.vy += fy / p1.mass
             p1.x += p1.vx
             p1.y += p1.vy
+            p1.update_trail()
 
         for spark in self.sparks[:]:
             spark.update()
