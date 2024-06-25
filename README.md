@@ -1,4 +1,4 @@
-# Gravity Simulator
+# Particle Gravity Simulator
 
 A simple gravity simulator built with Python and Pygame, where particles appear with a mouse click and interact with each other based on gravitational forces.
 
