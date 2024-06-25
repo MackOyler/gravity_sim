@@ -124,8 +124,14 @@ while running:
     ke, pe = simulation.calculate_total_energy()
     total_energy = ke + pe
     font = pygame.font.SysFont(None, 24)
-    energy_text = font.render(f'KE: {ke:.2e}, PE: {pe:.2e}, Total: {total_energy:.2e}', True, WHITE)
-    screen.blit(energy_text, (10, 10))
+    energy_text = [
+        f'Kinetic Energy (KE): {ke:.2e} J',
+        f'Potential Energy (PE): {pe:.2e} J',
+        f'Total Energy: {total_energy:.2e} J'
+    ]
+    for i, line in enumerate(energy_text):
+        text_surface = font.render(line, True, WHITE)
+        screen.blit(text_surface, (10, 10 + i * 20))
     
     pygame.display.flip()
 
